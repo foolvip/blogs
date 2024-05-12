@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input type="text" id="web"> <button id="add">添加图片</button>
+  <div class="box"></div>
+  <script src="/node_modules/jquery/dist/jquery.js"></script>
+  <script>
+    // DOM-Based不基于后端, 前端修改属性或者插入内容(document.write),改变了前端代码结构后会造成攻击, 例如对img标签进行组装并插入一些代码造成攻击
+    // xss payload是攻击的内容
+    $('#add').on('click', function(){
+      // <img src="xxx" onerror="alert(1)" id=""> // input输入内容为： xxx" onerror="alert(1)" id="
+      // <img ""><script>alert(1)<\/script>""> // input中输入的内容为"><script>alert(1)<\/script>"
+      
+      $('.box').html(`<img src="${encodeURI($('#web').val())}">`);
+    })
+  </script>
+</body>
+</html>
