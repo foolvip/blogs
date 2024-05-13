@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  a页面
+  <!-- 
+    a和b是同域的http://localhost:3000
+    c是独立的http://localhost:4000
+    a获取c的数据
+    
+    a先引用c c把值放到window.name,把a引用的地址改到b
+   -->
+  <iframe src="http://localhost:4000/c.html" frameborder="0" onload="load()" id="iframe"></iframe>
+  <script>
+    let first =  true; // 避免替换src替换后重新加载页面造成死循环
+    function load() { // c.html加载成功后调用方法，修改为同域；
+      if(first) {
+        let iframe = document.getElementById('iframe');
+        iframe.src = 'http://localhost:3000/b.html'; // 替换为同域
+        first = false;
+      } else { // b.html加载成功后输出c.html页面绑定的值
+        console.log(iframe.contentWindow.name);
+      }
+    }
+  </script>
+</body>
+</html>

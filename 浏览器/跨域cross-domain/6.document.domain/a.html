@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <!-- 域名：主要应用于一级域名与二级域名 -->
+  <!-- www.baidu.com -->
+  <!-- note.baidu.com -->
+
+  <iframe src="http://b.zf1.cn:3000/b.html" frameborder="0" onload="load()" id="frame"></iframe>
+  <script>
+    document.domain = 'zf1.cn';
+    function load() {
+      let frame = document.getElementById('frame');
+      console.log(frame.contentWindow.a);
+    }
+  </script>
+</body>
+</html>
