@@ -1,16 +1,114 @@
-# map 
+# map
+
 [中国地图数据下载](https://datav.aliyun.com/portal/school/atlas/area_selector#&lat=31.840232667909365&lng=104.2822265625&zoom=4)
 
 ## 显示南海诸岛缩略图
 
-问题原因在于地图注册的时候，China的首字母大写，改成小写，就会出现缩略图
+问题原因在于地图注册的时候，China 的首字母大写，改成小写，就会出现缩略图
+
+## 隐藏南海诸岛缩略图
+
+### 1. 通过 geo.regions 配置项隐藏南海诸岛
+
+```js
+const option = {
+  geo: {
+    type: "map",
+    map: "china", // 使用 registerMap 注册的地图名称
+    regions: [
+      {
+        name: "南海诸岛",
+        itemStyle: {
+          areaColor: "#f7f7f7",
+          normal: {
+            opacity: 0, // 为 0 时不绘制该图形
+          },
+        },
+        label: {
+          show: false, // 隐藏文字
+        },
+      },
+    ],
+  },
+};
+```
+
+### 2. 通过注册地图名称隐藏南海诸岛
+
+修改 registerMap 注册的地图名称为“China”，然后在 geo.name 配置项中隐藏南海诸岛
+
+```js
+echarts.registerMap("China", chinamap); // 用导入的json文件注册一个name:China的地图组件
+const option = {
+  geo: {
+    type: "map",
+    map: "China", // 使用 registerMap 注册的地图名称
+  },
+};
+```
 
 ## 隐藏南海诸岛边界线
 
-### 1. **json文件中**，删掉下面所示代码
- ![删除地图JSON](./imgs/deleteMapJosn.png)
+### 1. **json 文件中**，删掉下面所示代码
 
-### 2. 南海缩略图使用图片代替，腾讯健康、阿里统计目前是用图片来展示的
+![删除地图JSON](./imgs/deleteMapJosn.png)
+
+```js
+{
+		"type": "Feature",
+		"properties": {
+			"name": "",
+			"adchar": "JD",
+			"adcode": "100000_JD"
+		},
+		"geometry": {
+			"type": "MultiPolygon",
+			"coordinates": [...],
+		}
+	}
+```
+
+### 2. 通过 regions 配置项隐藏
+
+```js
+// 1、在json文件中给南海诸岛信息n的ame添加值，如：南海诸岛
+{
+		"type": "Feature",
+		"properties": {
+			"name": "南海诸岛", // json文件中给南海诸岛信息的name添加值
+			"adchar": "JD",
+			"adcode": "100000_JD"
+		},
+		"geometry": {
+			"type": "MultiPolygon",
+			"coordinates": [],
+		}
+	}
+
+// 2、在echarts配置项中配置regions隐藏南海诸岛
+const option = {
+       geo: {
+         type: 'map',
+         map: 'china',
+         regions: [ // 隐藏南海诸岛
+           {
+             name: '南海诸岛',
+             itemStyle: {
+               areaColor: '#f7f7f7',
+               normal: {
+                 opacity: 0, // 为 0 时不绘制该图形
+               },
+             },
+             label: {
+               show: false, // 隐藏文字
+             },
+           },
+         ],
+       },
+     };
+```
+
+### 3. 南海缩略图使用图片代替，腾讯健康、阿里统计目前是用图片来展示的
 
 ```js
 /**
@@ -210,33 +308,96 @@ class Map extends Component {
 
 Map.displayName = "Map";
 export default Map;
-
-
 ```
 
 ## 隐藏南海诸岛
 
-### 1. 官方代码配置
+### 1、在 series 的 data 字段做以下设置
 
 ```js
- regions: [
+option = {
+  series: [
     {
-        name: "南海诸岛",
-        itemStyle: {
-            // 隐藏地图
-            normal: {
-            opacity: 0, // 为 0 时不绘制该图形
-            },
+      itemStyle: {
+        normal: {
+          color: function (params) {
+            var colorList = ["#C1232B", "#B5C334", "#FCCE10"];
+            return colorList[params.dataIndex];
+          },
         },
-        label: {
-            show: false, // 隐藏文字
+      },
+      name: "iphone3",
+      type: "map",
+      left: "20px",
+      top: "10px",
+      mapType: "china",
+      roam: false,
+      label: {
+        normal: {
+          show: false,
         },
+        emphasis: {
+          show: true,
+        },
+      },
+      data: [
+        {
+          // ------------------------ 隐藏南海诸岛
+          name: "南海诸岛",
+          value: 0,
+          itemStyle: {
+            normal: { opacity: 0, label: { show: false } },
+          },
+        },
+        { name: "北京", value: randomData() },
+        { name: "天津", value: randomData() },
+      ],
     },
-],
+  ],
+};
 ```
 
-### 2. 更换JSON中的坐标数据
-这些岛屿都属于“海南省”，所以找到json文件中的“海南”，将其中的“coordinates”替换成下方代码：
+### 2、在 geo 字段做以下设置
+
+```js
+geo: {
+        map: 'china',
+        label: {
+            emphasis: {
+                show: false
+            }
+        },
+        regions: [
+            {
+                name: '南海诸岛',
+                value: 0,
+                itemStyle:
+                    {normal:
+                        {opacity: 0,
+                        label: {
+                            show: false
+
+                        }
+                    }
+                }
+            }],
+        itemStyle: {
+            normal: {
+                areaColor: '#323c48',
+                borderColor: '#404a59'
+            },
+            emphasis: {
+                areaColor: '#2a333d'
+            }
+        }
+    },
+
+
+```
+
+### 2、更换 JSON 中的坐标数据
+
+这些岛屿都属于“海南省”，所以找到 json 文件中的“海南”，将其中的“coordinates”替换成下方代码：
 ![hainan配置项](./imgs/hainanSetting.png)
 
 ```js
@@ -353,3 +514,7 @@ export default Map;
         ]
       ]
 ```
+
+# 参考文章
+
+- https://blog.csdn.net/n_2021/article/details/132836912
