@@ -1,5 +1,21 @@
 # h5微应用
+## 页面title ios无效
+```js
+// router.beforeEach(async function (to, from, next) {}
+if (to.meta && to.meta.title) {
+    document.title = to.meta.title
+    dd.ready(() => {
+        dd.setNavigationTitle({
+            title: document.title,
+            success: () => {},
+            fail: () => {},
+            complete: () => {},
+            });
+    })
+    
+}
 
+```
 ## [免登录](https://open.dingtalk.com/document/orgapp/logon-free-process)
 
 ```js
