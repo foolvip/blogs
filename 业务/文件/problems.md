@@ -24,6 +24,10 @@ vue项目的public文件夹下新建static文件夹，将需要下载的excel文
 
 这样就可以正常下载文件并查看文件内容
 
+## 滚动到可视范围内
+```js
+document.getElementById('baseLayoutBg').scrollIntoView()
+```
 # 总结
 
 ## 模拟a标签下载文件
