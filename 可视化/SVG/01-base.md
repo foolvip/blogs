@@ -179,8 +179,343 @@ SVG 元素分类体系理解SVG元素的用途和功能：
 
 SVG 和 HTML 还有一个共同的特征，那就是 SVG 元素也具有多种属性，这些属性用于定义元素的外观、行为和其他特征。以下是一些常见的 [SVG 元素属性](https://www.w3.org/TR/SVG/attindex.html)，具体属性的可用性和效果可能取决于元素类型和上下文。
 
-SVG元素属性URL：https://www.w3.org/TR/SVG/attindex.html
+[SVG元素属性URL](https://www.w3.org/TR/SVG/attindex.html)
 
 SVG 属性可分为：通用属性和特定元素属性两类。通用属性适用于所有 SVG 元素，而特定元素属性则用于特定的 SVG 元素。
 
+## 通用属性
 
+## 特定元素属性
+
+与 HTML 元素的属性一样，有很多属性是可以通用的，可以应用于所有 SVG 元素。
+- id ：为元素定义唯一标识符
+- class ：为元素定义一个或多个类名
+- style ：为元素定义内联 CSS 样式
+- fill： 定义元素的填充颜色
+- stroke： 定义元素的边框颜色
+- stroke-width： 定义元素的边框宽度
+- transform： 定义元素的变换，如平移、旋转、缩放等
+- 等等
+
+## 特定元素属性
+- SVG 有些属性只能应用于特定的元素上。例如 d 属性只适用于 <path> 元素
+- x1 、y1 、x2 和 y2 只适用于 <line> 元素
+- 有些属性也适用多个元素。例如用于 <circle> 元素上的 cx 和 cy 属性，也适用于 <ellipse>、<rect> 元素
+
+```svg
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 80 Q 95 10 180 80" />
+    <line x1="10" y1="10" x2="50" y2="50"  />
+    <ellipse cx="10" cy="10" rx="50" ry="50"  />
+    <rect x="10" y="10" width="200" height="200" rx="50" ry="50"  />
+</svg>
+```
+[SVG2规范即将推出的新功能](https://github.com/w3c/svgwg/wiki/SVG-2-new-features)
+
+使用 CSS 可以做一些更复杂的事情。例如在 SVG 的 <pattern> 元素中，通过 CSS 给图形添加动画效果：
+
+```SVG
+<svg xmlns="http://www.w3.org/2000/svg" width="100vw" height="100vh" class="pattern">
+  <defs>
+    <pattern id="blocks" patternUnits="userSpaceOnUse" width="240" height="240">
+      <rect width="120" height="120" class="topleft black" />
+      <rect width="120" height="120" class="topright white" x="120" />
+      <rect width="120" height="120" class="bottomleft white" y="120" />
+      <rect width="120" height="120" x="120" y="120" class="bottomright black" />
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#blocks)" />
+</svg>
+```
+```CSS
+@layer demo {
+  /* @keyframes backgroundshift {
+    49.99% {
+      background: white;
+    }
+    50% {
+      background: black;
+    }
+    100% {
+      background: black;
+    }
+  } */
+
+  @keyframes scaleshift {
+    0% {
+      scale:0.001;
+      rx: 60;
+    }
+    35% {
+      rx: 30;
+    }
+    50% {
+      scale:1;
+      rx: 0;
+    }
+    100% {
+      scale:1;
+      rx: 0;
+    }
+  }
+  .pattern {
+    display: block;
+    min-height: 100vh;
+    mix-blend-mode: overlay;
+  }
+
+  pattern rect {
+    animation: scaleshift 3s infinite cubic-bezier(0.36, 0.17, 0.86, 0.67);
+  }
+
+  .black {
+    fill: black;
+    animation-direction: alternate;
+  }
+  .white {
+    fill: white;
+    animation-direction: alternate-reverse;
+  }
+  .topleft {
+    transform-origin: 60px 60px;
+  }
+  .bottomleft {
+    transform-origin: 60px 180px;
+  }
+  .topright {
+    transform-origin: 180px 60px;
+  }
+  .bottomright {
+    transform-origin: 180px 180px;
+  }
+}
+
+```
+
+# SVG 绘制流程
+## 步骤一：创建 SVG 元素
+```SVG
+<!-- Step 01: 创建 SVG 元素 -->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="400" height="400" class="bear">
+    <!--  SVG 元素都在这里 -->
+</svg>
+
+```
+## 步骤二：组织文档结构
+
+使用 SVG 绘制图形，这一步不是必须的。但为了更好的组织 SVG 文档，或者你编写的 SVG 代码结构更清晰，更易于阅读和维护，那么可以根据需要，使用 <g> 元素或其他类似的结构合理的组织文档。
+```SVG
+<!-- Step 01: 创建 SVG 元素 -->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="400" height="400" class="bear">
+    <!--  Step 02: 使用 g 元素来分组 -->
+    
+    <!-- 熊的耳朵 -->
+    <g class="bear__ears">
+        <!-- 左耳朵 -->
+        <g class="bear__ear--left">
+            <!-- 绘制左耳朵 -->
+        </g>
+  
+        <!-- 右耳朵 -->
+        <g class="bear__ear--right">
+            <!-- 绘制右耳朵 -->
+        </g>
+    </g>
+    
+    <!-- 熊的脸 -->
+    <g class="bear__face">
+        <!-- 绘制脸 -->
+    </g>
+    
+    <!-- 熊的眼睛 -->
+    <g class="bear__eyes">
+        <!-- 绘制眼睛 -->
+    </g>    
+</svg>
+```
+## 步骤三：添加图形元素
+
+图形要想在 SVG 画布上呈现，你必须得在 <svg> 元素中添加各种图形元素或可渲染的元素，例如线条（<line>）、圆（<circle>）、椭圆（<ellips>）、矩形（<rect>）和路径（<path>）等。每个图形元素都有相应的属性用于定义其外观和位置。
+
+```SVG
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="400" height="400" class="bear">
+    <!-- 熊的耳朵 -->
+    <g class="bear__ears">
+        <!-- 左耳朵 -->
+        <g class="bear__ear--left">
+            <!-- 绘制左耳朵 -->
+            <circle cx="126" cy="118" r="32" fill="#8C6239" />
+            <circle cx="126" cy="118" r="16" fill="#42210B" />
+        </g>
+    
+        <!-- 右耳朵 -->
+        <g class="bear__ear--right">
+            <!-- 绘制右耳朵 -->
+            <circle cx="290" cy="118" r="32" fill="#8C6239" />
+            <circle cx="290" cy="118" r="16" fill="#42210B" />
+        </g>
+    </g>
+
+    <!-- 熊的脸 -->
+    <g class="bear__face">
+        <!-- 绘制脸 -->
+        <circle cx="208" cy="190" r="98" fill="#8C6239" />
+        <!-- 绘制胡子 -->
+        <path d="M263.4,217.4c0,34.4-24.7,62.3-55.1,62.3s-55.1-27.9-55.1-62.3s24.1-43.6,54.5-43.6
+      S263.4,183,263.4,217.4z" fill="#C69C6D" />
+    </g>
+
+    <!-- 熊的眼睛 -->
+    <g class="bear__eyes">
+        <!-- 左眼睛 -->
+        <circle class="bear__eye--left" cx="178" cy="160" r="8" />
+    
+        <!-- 左眼睛 -->
+        <circle class="bear__eye--right" cx="238" cy="160" r="8" />
+    </g>
+    
+    <!--  熊的鼻子  -->
+    <ellipse class="bear__snout" cx="208" cy="204" rx="26" ry="10" fill="#42210B" />
+  
+    <!--  熊的嘴  -->
+    <path class="bear__mouth" d="M243.2,234.2c-20.2,19.2-52,18.4-71.2-1.8" fill="none" stroke="#000000" stroke-width="6" stroke-miterlimit="10" />
+</svg>
+
+```
+## 步骤四：应用样式
+通常情况之下，完成第三步之后，小熊的脸就绘制出来了，也达到所要绘制的效果。但你可以做得更好。可以使用 CSS 样式为 SVG 元素设置样式。例如，在 CSS 中为元素设置填充颜色，边框颜色等。这样会使你的 SVG 代码更简洁。
+
+很多图形的填充色是相同的，比如眼睛的填充颜色和嘴的边框色都是黑色，耳朵的外圆和脸是相同的填充颜色，耳朵的内圆和鼻子是应用了相同的填充颜色。可以用几行 CSS 代码就可以替代 SVG 元素中多个应用的 fill 属性。
+
+```SVG
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="400" height="400" class="bear">
+    <!-- 熊的耳朵 -->
+    <g class="bear__ears">
+        <!-- 左耳朵 -->
+        <g class="bear__ear--left">
+            <!-- 绘制左耳朵 -->
+            <circle class="ear--out" cx="126" cy="118" r="32" />
+            <circle class="ear--inner" cx="126" cy="118" r="16" />
+        </g>
+    
+        <!-- 右耳朵 -->
+        <g class="bear__ear--right">
+            <!-- 绘制右耳朵 -->
+            <circle class="ear--out" cx="290" cy="118" r="32" />
+            <circle class="ear--inner" cx="290" cy="118" r="16" />
+        </g>
+    </g>
+
+    <!-- 熊的脸 -->
+    <g class="bear__face">
+        <!-- 绘制脸 -->
+        <circle cx="208" cy="190" r="98" />
+        <!-- 绘制胡子 -->
+        <path d="M263.4,217.4c0,34.4-24.7,62.3-55.1,62.3s-55.1-27.9-55.1-62.3s24.1-43.6,54.5-43.6
+      S263.4,183,263.4,217.4z" />
+    </g>
+
+    <!-- 熊的眼睛 -->
+    <g class="bear__eyes">
+        <!-- 左眼睛 -->
+        <circle class="bear__eye--left" cx="178" cy="160" r="8" />
+    
+        <!-- 左眼睛 -->
+        <circle class="bear__eye--right" cx="238" cy="160" r="8" />
+    </g>
+    
+    <!--  熊的鼻子  -->
+    <ellipse class="bear__snout" cx="208" cy="204" rx="26" ry="10" />
+  
+    <!--  熊的嘴  -->
+    <path class="bear__mouth" d="M243.2,234.2c-20.2,19.2-52,18.4-71.2-1.8" />
+</svg>
+
+```
+```CSS
+@layer demo {
+    :root {
+        --color-1: #8C6239;
+        --color-2: #42210B;
+        --color-3: #000;
+        --color-4: #C69C6D;
+    }
+  
+    .ear--out,
+    .bear__face circle {
+        fill: var(--color-1);
+    }
+  
+    .ear--inner,
+    .bear__snout{
+        fill: var(--color-2);
+    }
+  
+    .bear__eyes circle {
+        fill: var(--color-3);
+    }
+  
+    .bear__mouth {
+        stroke: var(--color-3);
+        stroke-width:6;
+        fill:none;
+        stroke-miterlimit: 10; 
+    }
+  
+    .bear__face path {
+        fill: var(--color-4);
+    }
+}
+
+```
+# 获取 SVG图形
+
+## 在线工具
+- [SVGEdit](https://svgedit.netlify.app/editor/index.html)
+- [Vectr](https://vectr.com/editor/6c473d33-3650-483f-aeae-a400bca2c344)
+- [MethodDraw ](https://editor.method.ac/)
+- [BoxySVG](https://boxy-svg.com/app)
+- [SVGator](https://www.svgator.com/)
+- 等等
+
+## JavaScript 动态生成 SVG
+```html
+<div id="svg-container">
+    <!-- JavaScript 动态创建的 SVG 将放在这里 -->
+</div>
+
+<script>
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("width", "100");
+    svg.setAttribute("height", "100");
+
+    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("cx", "50");
+    circle.setAttribute("cy", "50");
+    circle.setAttribute("r", "40");
+    circle.setAttribute("fill", "lime");
+    svg.appendChild(circle);
+
+    document.getElementById("svg-container").appendChild(svg);
+</script>
+```
+- ECharts
+- [D3.js](https://d3js.org/)：全名为 Data-Driven Documents，是一款强大的 JavaScript 库，致力于通过数据驱动的方式创建动态而富有交互性的数据可视化。由美国新闻与世界报道（U.S. News & World Report）的可视化专家 Mike Bostock 主导开发，D3.js 成为了前端领域中最受欢迎的数据可视化库之一。
+- [SVG.js](https://svgjs.dev/docs/3.2/)：一款专注于创建和操作 SVG 图形的现代 JavaScript 库。它的设计理念强调简单性、可读性和灵活性，使得开发者可以轻松地使用链式调用的方式创建和操纵 SVG 元素。适用于创建简单到复杂的 SVG 图形，包括图标、图表、动画等。由于其轻便和易用的特性，SVG.js 常常成为小型项目或需要轻量级图形库的开发者的首选。
+- [Snap.svg](http://snapsvg.io/)：一款由 Adobe 团队开发的现代 JavaScript 库，专注于操作和动画 SVG 图形。Snap.svg 提供了简洁而强大的 API，使得开发者能够轻松创建可交互的 SVG 图形，并实现各种动画效果。适用于各种需要 SVG 图形的项目，包括数据可视化、动画效果、交互式图形等。它的轻量性和强大的功能使得它成为 Web 开发者在处理 SVG 图形时的理想选择。
+- [Two.js](https://two.js.org/)：一款轻量级而功能强大的 2D 绘图库，专注于创建各种图形和动画。它的设计注重简单性，使得开发者能够轻松地绘制和操作矢量图形，并实现丰富的动画效果。适用于需要 2D 图形和动画的各种场景，包括数据可视化、图表绘制、创意艺术和交互性设计等。由于其简单性和灵活性，Two.js 成为许多开发者选择的工具，用于实现富有创意和引人注目的图形效果。
+
+# SVG使用方式
+
+## HTML中的SVG
+- SVG 作为普通图像应用于 HTML 中
+- SVG 以内联方式嵌套在 HTML 中
+- SVG 以 Data URIs 方式应用于 HTML 中
+### SVG 作为普通图像应用于 HTML 中
+使用 SVG 的最直接方式是将其视为图像，类似于我们处理JPG、PNG和GIF等格式的图像。在 HTML 中使用时，我们可以依然信赖我们的老朋友 <img> 标签：
+
+```html
+<img src="dog.svg" alt="dog" />
+```
+通常情况下，如果需要，可以添加 <img> 元素的属性，如宽度（width）、高度（height）和 alt等。
+当 SVG 以这种方式应用于 HTML 时，浏览器将其视为任何其他图像。出于安全原因，SVG 文件中的任何脚本、外部样式表、链接和其他 SVG 交互性都将被禁用。
