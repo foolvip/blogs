@@ -641,5 +641,3 @@ xhr.onload = () => {
 xhr.send();
 
 ```
-
-## 哪种 SVG 技术应该使用？
