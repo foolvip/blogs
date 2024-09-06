@@ -142,6 +142,18 @@ d 属性中有很多字母和数字，例如 M 、C 、c 和 Z 等，还有一�
 - c -19,-41 -60,-69 -108,-69 ：从当前点绘制贝塞尔曲线到新点 { x: 上一个点 - 108, y: 上一个点 - 69 } ；起始控制点是 { x: 上一个点 - 19, y: 上一个点 - 41 }，结束控制点是 { x: 上一个点 - 60, y: 上一个点 - 69 }
 - Z ：直线返回到起点
 
+它共有 18 个命令：
+- M 或 m：将路径的起始点移动到指定的坐标位置。
+- L 或 l：从当前点绘制一条直线到指定的坐标位置。
+- H 或 h：从当前点水平绘制一条直线到指定的 x 坐标位置。
+- V 或 v：从当前点垂直绘制一条直线到指定的 y 坐标位置。
+- C 或 c：绘制一条三次贝塞尔曲线，使用两个控制点来确定曲线的形状。
+- S 或 s：绘制一条平滑的三次贝塞尔曲线，只需要一个控制点，前一个控制点会被假设为上一条曲线的结束点的镜像。
+- Q 或 q：绘制一条二次贝塞尔曲线，使用一个控制点来确定曲线的形状。
+- T 或 t：绘制一条平滑的二次贝塞尔曲线，只需要一个控制点，前一个控制点会被假设为上一条曲线的结束点的镜像。
+- A 或 a：绘制一条弧线，用于绘制椭圆的一部分。
+- Z 或 z：闭合路径，从当前点绘制一条直线到路径的起始点，形成一个闭合的形状。
+
 上面这个命令都是成对出现的，一个大写版本和一个小写版本，但这并不意味着路径的命令都是以成对方式存在。SVG 路径命令中的大写版本和小写版本之间的区别主要在于坐标值的解释方式：
 - 大写版本（绝对坐标） ：大写命令表示路径坐标是绝对的，即相对于 SVG 视图的原点（左上角）来定义的。例如，大写命令 M 表示将路径的起始点移动到绝对坐标位置。
 - 小写版本（相对坐标） ：小写命令表示路径坐标是相对于当前点的位置来定义的。换句话说，它们是相对于上一个点的坐标偏移量。例如，小写命令 m 表示将路径的起始点移动到相对坐标位置。
@@ -149,3 +161,65 @@ d 属性中有很多字母和数字，例如 M 、C 、c 和 Z 等，还有一�
 因此，大写命令会将路径的起始点重新设置到指定的绝对位置，而小写命令会将路径的起始点移动相对于当前点的指定偏移量。这些命令可以组合在一起，以描述复杂的路径形状，从简单的直线到曲线和弧线等各种形状都可以用这些命令来绘制。
 
 # 图形元素的 DOM 接口
+
+SVG 为图形元素提供了对应的 DOM 接口。通过 JavaScript 脚本，可以访问图形元素的 DOM 接口。
+
+SVG 基本图形元素的 DOM 接口定义了用于操作这些图形的方法和属性。以下是 SVG 基本图形元素的 DOM 接口：
+
+- SVGRectElement（矩形元素） ：用于创建矩形。可以通过指定位置（x、y）、宽度（width）、高度（height）以及圆角（rx 和 ry）来定义矩形的形状和样式。通过创建 <rect> 元素，并设置其属性来定义矩形的位置、大小和圆角属性。
+- SVGCircleElement（圆形元素） ：用于创建圆形。可以通过指定圆心位置（cx、cy）和半径（r）来定义圆的形状和样式。通过创建 <circle> 元素，并设置其属性来定义圆的位置和半径。
+- SVGEllipseElement（椭圆元素） ：用于创建椭圆。可以通过指定中心点位置（cx、cy）和两个轴的半径（rx 和 ry）来定义椭圆的形状和样式。通过创建 <ellipse> 元素，并设置其属性来定义椭圆的位置和轴的半径。
+- SVGLineElement（直线元素） ：用于创建直线。可以通过指定起点（x1、y1）和终点（x2、y2）来定义直线的形状和样式。通过创建 <line> 元素，并设置其属性来定义直线的起点和终点。
+- SVGPolygonElement（多边形元素） ：用于创建多边形。可以通过指定多个顶点的坐标（points）来定义多边形的形状和样式。通过创建 <polygon> 元素，并设置其属性来定义多边形的顶点坐标。
+- SVGPolylineElement（折线元素） ：用于创建折线。与多边形类似，可以通过指定多个顶点的坐标（points）来定义折线的形状和样式。通过创建 <polyline> 元素，并设置其属性来定义折线的顶点坐标。
+
+这些 DOM 接口提供了一种通过 JavaScript 操作 SVG 基本图形元素的方式，可以动态地创建、修改和删除这些元素，从而实现对 SVG 图形的动态渲染和交互。
+
+以下是一个使用 SVG 基本图形元素 DOM 接口的示例，展示了如何通过 JavaScript 动态创建 SVG 图形：
+
+```xml
+<svg id="svg-container" width="400" height="200">
+    <!-- SVG图形将在这里动态创建 -->
+</svg>
+
+```
+
+```javascript
+const svgEle = document.getElementById("svg-container");
+// 创建矩形元素
+const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+rect.setAttribute("x", "50");
+rect.setAttribute("y", "50");
+rect.setAttribute("width", "100");
+rect.setAttribute("height", "50");
+rect.setAttribute("fill", "blue");
+svgEle.appendChild(rect);
+
+// 创建圆形元素
+const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+circle.setAttribute("cx", "250");
+circle.setAttribute("cy", "100");
+circle.setAttribute("r", "30");
+circle.setAttribute("fill", "green");
+svgEle.appendChild(circle);
+
+// 创建椭圆元素
+const ellipse = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+ellipse.setAttribute("cx", "150");
+ellipse.setAttribute("cy", "150");
+ellipse.setAttribute("rx", "80");
+ellipse.setAttribute("ry", "40");
+ellipse.setAttribute("fill", "yellow");
+svgEle.appendChild(ellipse);
+
+// 创建直线元素
+const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+line.setAttribute("x1", "200");
+line.setAttribute("y1", "50");
+line.setAttribute("x2", "300");
+line.setAttribute("y2", "150");
+line.setAttribute("stroke", "red");
+line.setAttribute("stroke-width", "2");
+svgEle.appendChild(line);
+
+```
