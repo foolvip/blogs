@@ -1,3 +1,7 @@
+# 参考文章
+
+- https://blog.csdn.net/n_2021/article/details/132836912
+
 # map
 
 [中国地图数据下载](https://datav.aliyun.com/portal/school/atlas/area_selector#&lat=31.840232667909365&lng=104.2822265625&zoom=4)
@@ -515,6 +519,187 @@ geo: {
       ]
 ```
 
-# 参考文章
 
-- https://blog.csdn.net/n_2021/article/details/132836912
+# 多数据滑动
+```js
+export const benefitSaleAmountTrendOption =  {
+    tooltip: {
+        trigger: 'axis',
+        confine: true,
+        axisPointer: {
+          type: 'shadow',
+          shadowStyle: {
+              color: '#DDE5FF',
+              opacity: 0.8
+          },
+          z: 0
+      },
+      formatter: (params) => {
+          // params 是一个数组，数组中包含每个系列的数据信息
+          let result = ''
+          result = params[0].axisValue + '<br />'
+          for (let i = 0; i < 2; i++) {
+            params[
+                i
+            ].marker = `<span style="display:inline-block;margin-right:4px;border-radius:2px;width:8px;height:8px;background-color:${params[i].color};"></span>`
+            params[i].seriesName = `<span style="color:${params[i].color};font-size:14px;">${params[i].seriesName}</span>`
+            params[i].value = `${formatNum(params[i].value, '万').num}${formatNum(params[i].value, '万').unit}元`
+            result += `${params[i].marker}${params[i].seriesName}&nbsp;${params[i].value}<br />`
+        }
+          return result
+      }
+    },
+    legend: {
+        bottom: '12%',
+        itemWidth: 8,
+        itemHeight: 8,
+        icon: 'roundRect', //矩形
+        selectedMode: false,
+        textStyle: {
+            //图例文本样式
+            color: '#7B7B84',
+            width: 300,
+            overflow: 'truncate',
+            ellipsis: '...'
+        }
+    },
+    grid: {
+        left: '3%',
+        right: '3%',
+        top: '15%',
+        bottom: '20%',
+        containLabel: true
+    },
+    xAxis: {
+        type: 'category',
+        axisTick: {
+            show: false
+        },
+        axisLine: {
+            show: false,
+            lineStyle: {
+                color: '#D5D7DC' //更改坐标轴颜色
+            }
+        },
+        axisLabel: {
+            //x轴标签
+            show: true,
+            color: '#7B7B84',
+            fontSize: 10,
+            margin: 8,
+            showMaxLabel: true,
+            interval: 0
+        },
+        data: []
+    },
+    yAxis: {
+        type: 'value',
+        name: '(元)',
+        position: 'left',
+        bottom: '0',
+        alignTicks: true,
+        nameTextStyle: {
+            //y轴文本
+            with: 40,
+            align: 'right'
+        },
+        splitLine: {
+            //y轴网格线
+            show: true,
+            lineStyle: {
+                type: 'dashed',
+                color: '#DADADA'
+            }
+        },
+        axisLine: {
+            show: false
+        },
+        axisLabel: {
+            show: true,
+            color: '#7B7B84',
+            fontSize: 12,
+            formatter: function (value) {
+                const _formatNum = formatNum(value, '万')
+                return _formatNum.num + _formatNum.unit
+            }
+        },
+        min: 0,
+        max: null,
+    },
+    dataZoom: [
+        {
+            type: 'slider',
+            show: false,
+            height: 14,
+            width: '100%',
+            xAxisIndex: [0],
+            fillerColor: '#ffffff',
+            borderColor: '#F2F5FF',
+            backgroundColor: '#F2F5FF',
+            showDataShadow: false,
+            showDetail: false,
+            left: 0,
+            bottom: '14%',
+            moveHandleSize: 0,
+            filterMode: 'filter',
+            start: 0,
+            handleSize: '0',
+            zoomLock: false,
+            brushSelect: false,
+            throttle: 100
+        }
+    ],
+    series: [
+        {
+            name: '',
+            type: 'bar',
+            data: [],
+            backgroundStyle: { // 背景色
+                color: '#F2F5FF'
+            },
+            itemStyle: {
+                color: '#0063F2'
+            },
+            stack: '总量',
+            barWidth: 20
+        },
+        {
+            name: '',
+            data: [],
+            type: 'bar',
+            stack: '总量',
+            itemStyle: {
+                color: '#F8C541'
+            },
+            backgroundStyle: {
+                color: '#F2F5FF'
+            },
+            barWidth: 20
+        },
+        // {
+        //     name: '',
+        //     data: [],
+        //     type: 'line',
+        //     symbol: 'none',
+        //     backgroundStyle: {
+        //         color: '#F2F5FF'
+        //     },
+        //     itemStyle: {
+        //         color: '#0063F2'
+        //     },
+        // },
+        // {
+        //     name: '',
+        //     data: [],
+        //     type: 'line',
+        //     symbol: 'none',
+        //     itemStyle: {
+        //         color: '#F8C541'
+        //     },
+        //     backgroundStyle: {
+        //         color: '#F2F5FF'
+        //     },
+        // }
+    ]
+}
+```
