@@ -21,4 +21,4 @@ background: linear-gradient(
 );
 ```
 
-![alt text](./imgs/linear-gradient-border.png)
+![linear-gradient-border](./imgs/linear-gradient-border.png)
