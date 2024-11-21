@@ -92,13 +92,24 @@ npm link 组件项目路径 # 醒目路径：/zoey/projects/vue3+vite+ts+sb
 # 构建&上传组件
 ```shell
 yarn build
+
 npm login
 
 npm publish
 
 ```
 # 使用组件库
+```js
+// main.js
 
+import { SnailButton } from 'business-components'
+import 'business-components/style.css'
+
+app.component('SnailButton', SnailButton) // 下载组件
+```
+```html
+<SnailButton label="测试" primary size="large" />
+```
 
 # 问题
 
