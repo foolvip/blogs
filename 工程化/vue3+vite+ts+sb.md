@@ -110,7 +110,12 @@ app.component('SnailButton', SnailButton) // 下载组件
 ```html
 <SnailButton label="测试" primary size="large" />
 ```
-
+# 包版本管理自动化
+- (standard-version)[https://github.com/conventional-changelog/standard-version]
+- (release-it)[https://github.com/release-it/release-it]
+- (changeset)[https://github.com/changesets/changesets]
+- (bumpp)[https://github.com/antfu-collective/bumpp]
+- (np)[https://github.com/sindresorhus/np]
 # 问题
 
 ## npm login
