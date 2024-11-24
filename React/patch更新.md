@@ -1,0 +1,24 @@
+# 组件更新
+
+1. React新版架构新增了一个Scheduler调度器主要用于调度Fiber节点的生成和更新任务
+2. 当组件更新时，Reconciler协调器执行组件的render方法生成一个Fiber节点之后再递归的去生成Fiber节点的子节点
+3. 每一个Fiber节点的生成都是一个单独的任务，会以回调的形式交给Scheduler进行调度处理，在Scheduler里会根据任务的优先级去执行任务
+4. 任务的优先级的指定是根据车道模型，将任务进行分类，每一类拥有不同的优先级，所有的分类和优先级都在React中进行了枚举
+5. Scheduler按照优先级执行任务时，会异步的执行，同时每一个任务执行完成之后，都会通过requestIdleCallBack去判断下一个任务是否能在当前渲染帧的剩余时间内完成
+6. 如果不能完成就发生中断，把线程的控制权交给浏览器，剩下的任务则在下一个渲染帧内执行
+7. 整个Reconciler和Scheduler的任务执行完成之后，会生成一个新的workInProgressFiber的新的节点树，之后Reconciler触发Commit阶段通知Render渲染器去进行diff操作，也就是我们说的patch流程
+
+React的Diff算法可以分为单节点Diff和多节点Diff，其中单节点Diff相对简单，包含以下流程：
+
+1. 首先会判断老的Fiber树上有没有对应的Fiber节点，若没有则说明是新增操作，直接在老Fiber树上新增节点并更新DOM
+2. 若老Fiber节点也存在，则判断节点上的key值是否相同，若不同则删除老节点并新增新节点
+3. 若key值相同，则判断节点的type是否相同，若不同则删除老节点并新增节点
+4. 若type值也相同，则认为是一个可复用的节点，直接返回老节点就行
+
+多节点的Diff操作主要用于map返回多个相同节点的情况下，可以分为三种情况：新增节点、删除节点以及节点移动，React采用双重遍历的方式来进行三种情况的判断，流程如下：
+
+1. 第一轮遍历会依次将 children[i] 和 currentFiber 以及 children[i++] 和 currentFiber.sibling 进行对比，当发现节点不可复用时提前结束遍历
+2. 当第一轮遍历无提前结束时，说明所有节点都可以复用，直接返回老节点
+3. 若children遍历完成，currentFiber未完成，则说明是删除操作，需要对未完成的 currentFiber 兄弟节点标记删除
+4. 若children遍历未完成，currentFiber完成，则说明是新增操作，需要生成新的workInProgressFiber节点
+5. 若children和currentFiber都未完成，则说明是节点位置发送了变更，那就对剩余的currentFiber进行遍历，并通过key值找到每一个节点在children中对应的老节点，并将老节点中的位置替换为新节点的
