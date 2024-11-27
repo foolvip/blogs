@@ -1,5 +1,14 @@
 # 项目搭建
+## 开发流程链路配置：
+- 初始化项目（包管理器+开发/构建工具） 
+- 各类开发工具配置（TS + 样式预处理器 + Lint + Git工具 + 前端测试 + 格式化等）
+- 测试辅助工具的可用性及适用性
+- 功能/业务代码开发（本文不涉及）
+- 校验、测试、规范化、Git操作等
 
+## 学习链接
+- [项目基础配置学习](https://www.cnblogs.com/fanqshun/p/16549011.html)
+- [组件开发配置](https://www.cnblogs.com/chun321/p/17824084.html)
 - [vite 配置+调试+构建上传](https://juejin.cn/post/7313761724338618395)
 - [Monorepo(pnpm + workspace)+ vitepress + install](https://juejin.cn/post/7120893568553582622)
 - [使用 storybook 创建 vue 项目组件使用指南](https://juejin.cn/post/7346481513541189667)
@@ -110,12 +119,66 @@ app.component('SnailButton', SnailButton) // 下载组件
 ```html
 <SnailButton label="测试" primary size="large" />
 ```
+# 按需引入element-plus
+- [elemen-plus官网按需引入](https://element-plus.org/zh-CN/guide/quickstart.html#%E6%8C%89%E9%9C%80%E5%AF%BC%E5%85%A5)
+
+首先你需要安装unplugin-vue-components 和 unplugin-auto-import这两款插件
+
+```shell
+npm install -D unplugin-vue-components unplugin-auto-import
+```
+然后把下列代码插入到你的 Vite 或 Webpack 的配置文件中
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+
+export default defineConfig({
+  // ...
+  plugins: [
+    // ...
+    AutoImport({
+      resolvers: [ElementPlusResolver()],
+    }),
+    Components({
+      resolvers: [ElementPlusResolver()],
+    }),
+  ],
+})
+```
+## 按需导入的原理
+- [按需加载](https://juejin.cn/post/6968505746757533710#heading-12)
+- [按需加载](https://pengzhenglong.github.io/2022/03/27/%E7%BB%84%E4%BB%B6%E5%BA%93%E6%8C%89%E9%9C%80%E5%8A%A0%E8%BD%BD%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/)
 # 包版本管理自动化
 - (standard-version)[https://github.com/conventional-changelog/standard-version]
 - (release-it)[https://github.com/release-it/release-it]
 - (changeset)[https://github.com/changesets/changesets]
 - (bumpp)[https://github.com/antfu-collective/bumpp]
 - (np)[https://github.com/sindresorhus/np]
+
+# storybook服务添加接口请求代理
+1. 安装 http-proxy-middleware 依赖包
+```shell
+npm install http-proxy-middleware --save-dev
+```
+2. 在\.storybook文件夹中新建：middleware.js
+```js
+const { createProxyMiddleware } = require("http-proxy-middleware");
+
+module.exports = function expressMiddleware(router) {
+	router.use(
+		"/api",
+		createProxyMiddleware({
+			target: "http://youdomain.com",
+			changeOrigin: true,
+		})
+	);
+};
+```
+
+
 # 问题
 
 ## npm login
