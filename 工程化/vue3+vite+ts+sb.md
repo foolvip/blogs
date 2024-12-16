@@ -158,6 +158,62 @@ export default defineConfig({
 - (bumpp)[https://github.com/antfu-collective/bumpp]
 - (np)[https://github.com/sindresorhus/np]
 
+# 按需引入element-plus 后的样式隔离
+1. 安装 sass
+```shell
+npm i sass -D
+```
+2. element-plus组件修改命名空间
+```html
+<!-- App.vue -->
+<template>
+  <el-config-provider namespace="bus-com">
+	<!-- element-plus组件 -->
+  </el-config-provider>
+</template>
+```
+3. 在src的styles文件夹下新建element.scss文件
+
+```scss
+// src/styles/element.scss
+@forward 'element-plus/theme-chalk/src/mixins/config.scss' with (
+  $namespace: 'bus-com'
+);
+// 按需引入
+@use "element-plus/theme-chalk/src/overlay.scss" as *;
+@use "element-plus/theme-chalk/src/loading.scss" as *;
+@use "element-plus/theme-chalk/src/message.scss" as *;
+@use "element-plus/theme-chalk/src/message-box.scss" as *;
+
+// 全量引入
+// @use "element-plus/theme-chalk/src/index.scss" as *;
+```
+4. 修改vite.config.js
+
+```js
+// vite.config.js
+import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
+defineConfig(
+  {
+    plugins: [
+      Components({
+        resolvers: [ElementPlusResolver({
+          importStyle: 'sass',
+        })],
+      }),
+    ],
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: `@use "@/styles/element.scss" as *;`,
+        },
+      },
+    },
+  }
+)
+
+```
+
 # storybook服务添加接口请求代理
 1. 安装 http-proxy-middleware 依赖包
 ```shell
