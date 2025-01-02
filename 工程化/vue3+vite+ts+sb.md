@@ -7,9 +7,9 @@
 - 校验、测试、规范化、Git操作等
 
 ## 学习链接
+- [vite 配置+调试+构建上传](https://juejin.cn/post/7313761724338618395):创建项目
 - [项目基础配置学习](https://www.cnblogs.com/fanqshun/p/16549011.html)
 - [组件开发配置](https://www.cnblogs.com/chun321/p/17824084.html)
-- [vite 配置+调试+构建上传](https://juejin.cn/post/7313761724338618395)
 - [Monorepo(pnpm + workspace)+ vitepress + install](https://juejin.cn/post/7120893568553582622)
 - [使用 storybook 创建 vue 项目组件使用指南](https://juejin.cn/post/7346481513541189667)
 - [vite + vue3 + storybook + ts 搭建 vue 组件库记录](https://blog.csdn.net/qq_35459724/article/details/130848582)
