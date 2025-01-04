@@ -65,7 +65,7 @@ export default function() {
 };
 export const function1() {...};
 export const function2() {...};
- ```
+```
 - 在编译时导入、导出，只能看代码不能执行
 - 只能在顶部导入，不能嵌套在条件语句中
 - (静态模块结构)[https://exploringjs.com/es6/ch_modules.html#static-module-structure] 可以进行 tree-shaking

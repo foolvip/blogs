@@ -7,6 +7,7 @@
 - 校验、测试、规范化、Git操作等
 
 ## 学习链接
+
 - [vite 配置+调试+构建上传](https://juejin.cn/post/7313761724338618395):创建项目
 - [项目基础配置学习](https://www.cnblogs.com/fanqshun/p/16549011.html)
 - [组件开发配置](https://www.cnblogs.com/chun321/p/17824084.html)
@@ -18,6 +19,7 @@
 
 
 # 创建项目
+
 ```shell
 mkdir comProject
 
@@ -27,6 +29,7 @@ npx storybook@next init
 ```
 
 # vite打包配置
+
 ```javascript
 // vite.config.ts
 import { defineConfig } from "vite";
@@ -65,7 +68,9 @@ export default defineConfig({
 });
 
 ```
+
 # 导出文件配置
+
 ```javascript
 // package.json
 "type": "module",
@@ -88,6 +93,7 @@ export default defineConfig({
 ```
 
 # 调试
+
 1. 在组件根目录下执行
 ```shell
 npm link
@@ -98,7 +104,9 @@ npm link
 ```shell
 npm link 组件项目路径 # 醒目路径：/zoey/projects/vue3+vite+ts+sb
 ```
+
 # 构建&上传组件
+
 ```shell
 yarn build
 
@@ -108,6 +116,7 @@ npm publish
 
 ```
 # 使用组件库
+
 ```js
 // main.js
 
@@ -215,6 +224,7 @@ defineConfig(
 ```
 
 # storybook服务添加接口请求代理
+
 1. 安装 http-proxy-middleware 依赖包
 ```shell
 npm install http-proxy-middleware --save-dev
