@@ -17,7 +17,7 @@ git commit --allow-empty -n -m "Initial commit."
 ```
 ## 5、在subtree1项目里运行下面的命令
 ```bash
-git subtree add --prefix=commonProject https://gitlab.meditrusthealth.com/foolvip/gitSubtreeCommon.git master
+git subtree add --prefix=commonProject https://github.com/foolvip/gitSubtreeCommon.git master
 ```
 ![subtree1项目变化](./imgs/subtree1.png)
 - 1）、会在subtree1项目中创建一个commonProject项目文件夹，并且会拉取gitSubtreeCommon项目中的文件到subtree1项目中commonProject文件夹下
@@ -29,9 +29,9 @@ git subtree add --prefix=commonProject https://gitlab.meditrusthealth.com/foolvi
 1. 在 gitSubtreeCommon 这个项目下加两个 commit(3.md、4.md)
 2. 在subtree1项目中运行下面的命令拉取，通用项目的最新改动就拉下来了
 ```bash
-git subtree pull --prefix=commonProject https://gitlab.meditrusthealth.com/foolvip/gitSubtreeCommon.git master
+git subtree pull --prefix=commonProject https://github.com/foolvip/gitSubtreeCommon.git master
 # 添加remote名称，简化拉取命令
-git remote add commonProject https://gitlab.meditrusthealth.com/foolvip/gitSubtreeCommon.git
+git remote add commonProject https://github.com/foolvip/gitSubtreeCommon.git
 # 简化后拉取命令
 git subtree pull --prefix=commonProject commonProject master
 # 添加--squash，只有一个合并（通用项目gitSubtreeCommon多次提交）后的 commit，一个 merge commit
@@ -44,5 +44,25 @@ git subtree pull --prefix=commonProject commonProject master --squash
 暂存、提交、推送远程
 
 ![所有记录](./imgs/allLogs.png)
+
+# subModule
+
+## 1、创建一个具有定制化功能的项目subModule1
+```bash
+https://github.com/foolvip/subModule.git
+```
+## 2、在subtree1项目里运行下面的命令
+```bash
+git submodule add https://github.com/foolvip/gitSubtreeCommon.git commonProj
+```
+![submodule1项目变化](./imgs/submodule1.png)
+
+- 1）、会在submodule1项目中创建一个commonProj项目文件夹，生成一个子模块commonProj，并且会拉取commonProj项目中的文件到submodule1项目中commonProj文件夹下，打开子模块可以看到commonProj项目git记录   
+![子模块](./imgs/submodule2.png)
+- 2）、在submodule1生成.gitmodules文件，存放commonProj的git地址、名称  
+- 3）、执行git pull时会拉取更新的代码，在commonRroj中生成一条commit日志 
+![拉取日志](./imgs/submodule3.png)
+- 4）、在commonProj项目中有.git文件，记录提交记录但是不存在submodule1中,存在commonProj项目中
+
 
 
