@@ -31,3 +31,4 @@ yarn add qiankun -S
 - (应用案例)[https://juejin.cn/post/7426954878680727586#heading-6]
 - (框架对比)[https://blog.csdn.net/m0_56416159/article/details/140328659]
 - (框架对比)[https://juejin.cn/post/7467587991617355812#heading-6]
+- (github借鉴仓库地址)[https://github.com/a1029563229/micro-front-template]
